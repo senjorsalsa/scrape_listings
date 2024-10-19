@@ -37,8 +37,8 @@ def scrape_main(v1, v2, v3, v4):
     })
     curr_time = datetime.now()
     filename = "result {timestamp}.xlsx".format(timestamp = curr_time.strftime('%Y-%m-%dT%H%M%S'))
-    print("Saving file")
     df.to_excel(filename, index=False)
+    
     print(f"File saved as {filename}")
 
 # not all lists exists, hence this function
