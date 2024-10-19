@@ -6,13 +6,8 @@ window.title("Hitta lägenheter")
 window.config(padx=20, pady=20)
 window.geometry("280x200")
 
-
 def button_clicked():
     scrape_main(var1, var2, var3, var4)
-
-
-submit_button = Button(text="Hämta lägenheter", command=button_clicked)
-submit_button.grid(row=5, column=0, pady=10)
 
 var1 = IntVar()
 var2 = IntVar()
@@ -30,5 +25,8 @@ heim_check.grid(row=2, column=0, sticky="w")
 
 boplats_check = Checkbutton(text="Boplats Syd", variable=var4, onvalue=1, offvalue=0)
 boplats_check.grid(row=3, column=0, sticky="w")
+
+submit_button = Button(text="Hämta lägenheter", command=button_clicked)
+submit_button.grid(row=5, column=0, pady=10)
 
 window.mainloop()
