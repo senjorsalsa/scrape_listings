@@ -41,7 +41,7 @@ def scrape_main(v1, v2, v3, v4):
     
     print(f"File saved as {filename}")
 
-# not all lists exists, hence this function
+# not all lists have data, hence this function
 def combine_lists(list1=None, list2=None, list3=None, list4=None):
     lists_to_combine = [lst for lst in [list1, list2, list3, list4] if lst]
     combined_list = [item for sublist in lists_to_combine for item in sublist]
