@@ -36,16 +36,15 @@ def scrape_main(v1, v2, v3, v4):
         "Link": all_links
     })
     curr_time = datetime.now()
-    filename = f"result {curr_time.strftime('%Y-%m-%d - %H-%M-%S')}.xlsx"
+    filename = "result {timestamp}.xlsx".format(timestamp = curr_time.strftime('%Y-%m-%d - %H-%M-%S'))
     print("Saving file")
     df.to_excel(filename, index=False)
     print(f"File saved as {filename}")
 
-
-def combine_lists(list1=None, list2=None, list3=None, list4=None, ):
+# not all lists exists, hence this function
+def combine_lists(list1=None, list2=None, list3=None, list4=None):
     lists_to_combine = [lst for lst in [list1, list2, list3, list4] if lst]
     combined_list = [item for sublist in lists_to_combine for item in sublist]
-
     return combined_list
 
 
@@ -100,6 +99,7 @@ def scrape_heimstaden():
                  "&number_of_rooms_min=1&number_of_rooms_max=10&rent_min=0&rent_max=26000&size_min=0&size_max=300" \
                  "&properties_true_false%5B%5D=not_student&offset=15 "
     driver.get(scrape_url)
+    # Heimstaden sometimes takes a while to load, implicitly wait 10 seconds seems to help
     driver.implicitly_wait(10)
     cookie_accept = driver.find_element(By.CSS_SELECTOR, "a._brlbs-btn._brlbs-btn-accept-all._brlbs-cursor")
     cookie_accept.click()
