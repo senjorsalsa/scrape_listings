@@ -55,11 +55,6 @@ def scrape_riksbyggen():
     driver = webdriver.Chrome(chrome_options)
     driver.get(scrape_url)
     driver.implicitly_wait(4)
-    try:
-        cookie_accept = driver.find_element(By.CSS_SELECTOR, ".cookie-consent-btn-accept-all")
-        cookie_accept.click()
-    except NoSuchElementException as e:
-        print("No cookies to accept:", e)
         
     try:
         fact_spans = driver.find_elements(By.CSS_SELECTOR, ".search-result-fact")
@@ -110,11 +105,6 @@ def scrape_heimstaden():
                  "&properties_true_false%5B%5D=not_student&offset=15 "
     driver.get(scrape_url)
     driver.implicitly_wait(10)
-    try:
-        cookie_accept = driver.find_element(By.CSS_SELECTOR, "a._brlbs-btn._brlbs-btn-accept-all._brlbs-cursor")
-        cookie_accept.click()
-    except NoSuchElementException as e:
-        print("No cookies to accept:", e)
 
     try:
         all_links = [anchor.get_attribute("href") for anchor in driver.find_elements(By.CSS_SELECTOR, ".main-img")]
@@ -144,13 +134,6 @@ def scrape_boplatssyd():
     driver = webdriver.Chrome(chrome_options)
     driver.get(scrape_url)
     driver.implicitly_wait(4)
-    try:
-        cookie_accept = driver.find_element(By.CSS_SELECTOR, "span.cf1y60")
-        cookie_accept.click()
-    except NoSuchElementException as e:
-        print("No cookies to accept at Boplats Syd:", e)
-    
-    driver.implicitly_wait(1)
 
     try:
         all_links = [anchor.get_attribute("href") for anchor in
@@ -186,13 +169,14 @@ def scrape_blocket():
 
     driver.implicitly_wait(2)
 
+    # Blocket needs to accept cookies before scraping
     try:
         cookie_accept = driver.find_element(By.CSS_SELECTOR, ".qds-13bz2bp")
         cookie_accept.click()
     except NoSuchElementException as e:
         print("No cookies to accept at Blocket:", e)
 
-    driver.implicitly_wait(4)
+    driver.implicitly_wait(2)
 
     try:
         all_cards = driver.find_elements(By.CSS_SELECTOR, ".e1kwthy90.qds-v6u3t0")
