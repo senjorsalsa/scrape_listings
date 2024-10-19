@@ -41,11 +41,10 @@ def scrape_main(v1, v2, v3, v4):
     df.to_excel(filename, index=False)
     print(f"File saved as {filename}")
 
-
-def combine_lists(list1=None, list2=None, list3=None, list4=None, ):
+# not all lists have data, hence this function
+def combine_lists(list1=None, list2=None, list3=None, list4=None):
     lists_to_combine = [lst for lst in [list1, list2, list3, list4] if lst]
     combined_list = [item for sublist in lists_to_combine for item in sublist]
-
     return combined_list
 
 
