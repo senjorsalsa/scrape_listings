@@ -147,6 +147,7 @@ def scrape_boplatssyd():
         properties = driver.find_elements(By.CSS_SELECTOR, ".rental-object__item-properties")
     except NoSuchElementException:
         print("Hittade inga lägenheter på BoplatsSyd")
+        driver.quit()
         return None, None, None, None
 
     for listing_data in properties:
@@ -188,6 +189,7 @@ def scrape_blocket():
             all_room_sizes_divided.append(p_texts)
     except NoSuchElementException:
         print("Hittade inga lägenheter på Blocket")
+        driver.quit()
         return None, None, None, None
 
     all_rooms = [' '.join(sublist) for sublist in all_room_sizes_divided]
