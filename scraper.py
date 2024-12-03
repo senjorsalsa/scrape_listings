@@ -1,9 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import pandas as pd
-import openpyxl
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime
+import pandas as pd
+import openpyxl
 
 
 def scrape_main(v1, v2, v3, v4):
@@ -37,14 +37,15 @@ def scrape_main(v1, v2, v3, v4):
     })
     curr_time = datetime.now()
     filename = f"result {curr_time.strftime('%Y-%m-%dT%H%M%S')}.xlsx"
-    print("Saving file")
-    df.to_excel(filename, index=False)
+    df.to_excel(f"Results\\{filename}", index=False)
     print(f"File saved as {filename}")
 
-# not all lists have data, hence this function
-def combine_lists(list1=None, list2=None, list3=None, list4=None):
+
+# lists can be empty, hence this function, combines lists unless they are None
+def combine_lists(list1=None, list2=None, list3=None, list4=None, ):
     lists_to_combine = [lst for lst in [list1, list2, list3, list4] if lst]
     combined_list = [item for sublist in lists_to_combine for item in sublist]
+
     return combined_list
 
 
@@ -55,20 +56,20 @@ def scrape_riksbyggen():
     driver = webdriver.Chrome(chrome_options)
     driver.get(scrape_url)
     driver.implicitly_wait(4)
-        
+
     try:
         fact_spans = driver.find_elements(By.CSS_SELECTOR, ".search-result-fact")
-    
+
         all_rooms = []
         all_prices = []
         current_rok = None
-    
+
         for fact in fact_spans:
             inner_span = fact.find_element(By.TAG_NAME, 'span')
             if inner_span:
                 value = inner_span.text.strip()
                 unit = fact.text.replace(value, '').strip()
-    
+
                 if 'rok' in unit:
                     current_rok = f"{value} {unit}"
                 elif 'kvm' in unit and current_rok:
@@ -76,7 +77,7 @@ def scrape_riksbyggen():
                     current_rok = None
                 elif 'kr/mån' in unit:
                     all_prices.append(f"{value} kr")
-    
+
         all_addresses = []
         all_links = []
         address_divs = driver.find_elements(By.CSS_SELECTOR, ".heading-with-label")
@@ -84,7 +85,7 @@ def scrape_riksbyggen():
         print("No apartments available at Riksbyggen:", e)
         driver.quit()
         return None, None, None, None
-    
+
     for address_h3 in address_divs:
         h3_tag = address_h3.find_element(By.TAG_NAME, "h3")
         h3_anchor = h3_tag.find_element(By.TAG_NAME, "a")
@@ -102,8 +103,9 @@ def scrape_heimstaden():
                  "&search_version=1.5&order=&tracking_object_type=Apartment&google_place_id" \
                  "=ChIJf5zvoBtlUUYR5E91QW3RWUU&google_place_type=locality&google_place_name=Trelleborg" \
                  "&number_of_rooms_min=1&number_of_rooms_max=10&rent_min=0&rent_max=26000&size_min=0&size_max=300" \
-                 "&properties_true_false%5B%5D=not_student&offset=15 "
+                 "&properties_true_false%5B%5D=not_student&offset=15"
     driver.get(scrape_url)
+    # Heimstaden webpage can be slow at times, implicitly waiting 10 seconds seems to work okay
     driver.implicitly_wait(10)
 
     try:
@@ -145,7 +147,7 @@ def scrape_boplatssyd():
         all_rooms = []
         properties = driver.find_elements(By.CSS_SELECTOR, ".rental-object__item-properties")
     except NoSuchElementException as e:
-        print("No apartments available at BoplatsSyd:", e)
+        print("No apartments available at Boplats Syd:", e)
         driver.quit()
         return None, None, None, None
 
@@ -169,14 +171,11 @@ def scrape_blocket():
 
     driver.implicitly_wait(2)
 
-    # Blocket needs to accept cookies before scraping
     try:
         cookie_accept = driver.find_element(By.CSS_SELECTOR, ".qds-13bz2bp")
         cookie_accept.click()
     except NoSuchElementException as e:
         print("No cookies to accept at Blocket:", e)
-
-    driver.implicitly_wait(2)
 
     try:
         all_cards = driver.find_elements(By.CSS_SELECTOR, ".e1kwthy90.qds-v6u3t0")
